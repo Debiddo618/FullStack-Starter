@@ -15,6 +15,7 @@ import { EnhancedTableHead, EnhancedTableToolbar, getComparator, stableSort } fr
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import InventoryFormModal from '../components/Inventorys/InventoryFormModal'
+import InventoryDeleteModal from '../components/Inventorys/InventoryDeleteModal'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -127,43 +128,29 @@ const InventoryLayout = (props) => {
   
   const saveInventory = useCallback(inventory => { dispatch(inventoryDuck.saveInventory(inventory))}, [dispatch])
   const updateInventory = useCallback((ids,inventory) => { dispatch(inventoryDuck.updateInventory(ids, inventory))}, [dispatch])
-
-  //const removeInventory = useCallback(inventory => { dispatch(inventoryDuck.removeInventory(inventory.id))}, [dispatch])
+  const removeInventory = useCallback(id => { dispatch(inventoryDuck.removeInventory(id))}, [dispatch])
 
 
   const [isCreateOpen, setCreateOpen] = React.useState(false)
   const [isEditOpen, setEditOpen] = React.useState(false)
-  //const [isDeleteOpen, setDeleteOpen] = React.useState(false)
+  const [isDeleteOpen, setDeleteOpen] = React.useState(false)
   const toggleCreate = () => {
     setCreateOpen(true)
   }
   const toggleEdit = () => {
     setEditOpen(true)
   }
-  // const toggleDelete = () => {
-  //   setDeleteOpen(true)
-  // }
-  const toggleModals = (resetChecked) => {
+  const toggleDelete = () => {
+    setDeleteOpen(true)
+  }
+  const toggleModals = (resetSelected) => {
     setCreateOpen(false)
-    //setDeleteOpen(false)
+    setDeleteOpen(false)
     setEditOpen(false)
-    if (resetChecked) {
-      //setChecked([])
+    if (resetSelected) {
+      setSelected([])
     }
   }
-  // const [checked, setChecked] = React.useState([])
-  // const handleToggle = (value) => () => {
-  //   const currentIndex = checked.indexOf(value)
-  //   const newChecked = [...checked]
-
-  //   if (currentIndex === -1) {
-  //     newChecked.push(value)
-  //   } else {
-  //     newChecked.splice(currentIndex, 1)
-  //   }
-  //   setChecked(newChecked)
-  // }
-
 
   return (
     <Grid container>
@@ -173,7 +160,7 @@ const InventoryLayout = (props) => {
           title='Inventory'
           toggleCreate={toggleCreate}
           toggleEdit={toggleEdit}
-          //toggleDelete={toggleDelete}
+          toggleDelete={toggleDelete}
         />
         <TableContainer component={Paper}>
           <Table size='small' stickyHeader>
@@ -245,6 +232,12 @@ const InventoryLayout = (props) => {
           productType={products}
           initialValues={normalizedInventoryToEdit[0]}
           selected= {selected[0]}
+        />
+        <InventoryDeleteModal
+          isDialogOpen={isDeleteOpen}
+          handleDelete={removeInventory}
+          handleDialog={toggleModals}
+          initialValues={selected}
         />
         
       </Grid>
