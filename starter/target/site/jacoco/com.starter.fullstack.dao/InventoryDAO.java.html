@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">starter-fullstack</a> &gt; <a href="index.source.html" class="el_package">com.starter.fullstack.dao</a> &gt; <span class="el_source">InventoryDAO.java</span></div><h1>InventoryDAO.java</h1><pre class="source lang-java linenums">package com.starter.fullstack.dao;
+
+import com.starter.fullstack.api.Inventory;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.PostConstruct;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.Index;
+import org.springframework.data.mongodb.core.index.IndexOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.Assert;
+
+/**
+ * Inventory DAO
+ */
+public class InventoryDAO {
+  private final MongoTemplate mongoTemplate;
+  private static final String NAME = &quot;name&quot;;
+  private static final String PRODUCT_TYPE = &quot;productType&quot;;
+
+  /**
+   * Default Constructor.
+   * @param mongoTemplate MongoTemplate.
+   */
+<span class="fc" id="L29">  public InventoryDAO(MongoTemplate mongoTemplate) {</span>
+<span class="fc" id="L30">    Assert.notNull(mongoTemplate, &quot;MongoTemplate must not be null.&quot;);</span>
+<span class="fc" id="L31">    this.mongoTemplate = mongoTemplate;</span>
+<span class="fc" id="L32">  }</span>
+
+  /**
+   * Constructor to build indexes for rate blackout object
+   */
+  @PostConstruct
+  public void setupIndexes() {
+<span class="fc" id="L39">    IndexOperations indexOps = this.mongoTemplate.indexOps(Inventory.class);</span>
+<span class="fc" id="L40">    indexOps.ensureIndex(new Index(NAME, Sort.Direction.ASC));</span>
+<span class="fc" id="L41">    indexOps.ensureIndex(new Index(PRODUCT_TYPE, Sort.Direction.ASC));</span>
+<span class="fc" id="L42">  }</span>
+
+  /**
+   * Find All Inventory.
+   * @return List of found Inventory.
+   */
+  public List&lt;Inventory&gt; findAll() {
+<span class="fc" id="L49">    return this.mongoTemplate.findAll(Inventory.class);</span>
+  }
+
+  /**
+   * Save Inventory.
+   * @param inventory Inventory to Save/Update.
+   * @return Created/Updated Inventory.
+   */
+  public Inventory create(Inventory inventory) {
+    //Save inventory object into the database
+<span class="fc" id="L59">    inventory.setId(null);</span>
+<span class="fc" id="L60">    return this.mongoTemplate.save(inventory);</span>
+  }
+
+  /**
+   * Retrieve Inventory.
+   * @param id Inventory id to Retrieve.
+   * @return Found Inventory.
+   */
+  public Optional&lt;Inventory&gt; retrieve(String id) {
+    // TODO
+<span class="nc" id="L70">    return Optional.empty();</span>
+  }
+
+  /**
+   * Update Inventory.
+   * @param id Inventory id to Update.
+   * @param inventory Inventory to Update.
+   * @return Updated Inventory.
+   */
+  public Optional&lt;Inventory&gt; update(String id, Inventory inventory) {
+<span class="fc" id="L80">    Query query = new Query();</span>
+<span class="fc" id="L81">    query.addCriteria(Criteria.where(&quot;id&quot;).is(id));</span>
+
+<span class="fc" id="L83">    Update update = new Update();</span>
+<span class="fc" id="L84">    update.set(&quot;name&quot;, inventory.getName());</span>
+<span class="fc" id="L85">    update.set(&quot;productType&quot;, inventory.getProductType());</span>
+<span class="fc" id="L86">    update.set(&quot;description&quot;, inventory.getDescription());</span>
+<span class="fc" id="L87">    update.set(&quot;averagePrice&quot;, inventory.getAveragePrice());</span>
+<span class="fc" id="L88">    update.set(&quot;amount&quot;, inventory.getAmount());</span>
+<span class="fc" id="L89">    update.set(&quot;unitOfMeasurement&quot;, inventory.getUnitOfMeasurement());</span>
+<span class="fc" id="L90">    update.set(&quot;bestBeforeDate&quot;, inventory.getBestBeforeDate());</span>
+<span class="fc" id="L91">    update.set(&quot;neverExpires&quot;, inventory.isNeverExpires());</span>
+
+<span class="fc" id="L93">    FindAndModifyOptions options = FindAndModifyOptions.options().returnNew(true);</span>
+<span class="fc" id="L94">    Inventory updatedInventory = this.mongoTemplate.findAndModify(query, update, options, Inventory.class);</span>
+
+<span class="fc" id="L96">    return Optional.ofNullable(updatedInventory);</span>
+  }
+
+  /**
+   * Delete Inventory By Id.
+   * @param id Id of Inventory.
+   * @return Deleted Inventory.
+   */
+  public Optional&lt;Inventory&gt; delete(String id) {
+<span class="fc" id="L105">    Query query = new Query();</span>
+<span class="fc" id="L106">    query.addCriteria(Criteria.where(&quot;id&quot;).is(id));</span>
+<span class="fc" id="L107">    Inventory deleted = this.mongoTemplate.findAndRemove(query, Inventory.class);</span>
+<span class="fc" id="L108">    Optional&lt;Inventory&gt; deletedInventory = Optional.ofNullable(deleted);</span>
+<span class="fc" id="L109">    return deletedInventory;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

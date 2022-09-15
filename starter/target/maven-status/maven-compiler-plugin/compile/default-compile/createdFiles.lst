@@ -1,0 +1,11 @@
+com/starter/fullstack/api/Inventory.class
+com/starter/fullstack/StarterApp.class
+com/starter/fullstack/dao/InventoryDAO.class
+com/starter/fullstack/dao/ProductDAO.class
+com/starter/fullstack/config/StarterConfig.class
+com/starter/fullstack/config/WebSecurityConfig.class
+com/starter/fullstack/rest/InventoryController.class
+com/starter/fullstack/config/WebSecurityProperties.class
+com/starter/fullstack/rest/ProductController.class
+com/starter/fullstack/api/UnitOfMeasurement.class
+com/starter/fullstack/api/Product.class

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.15">
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/StarterApp.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/Inventory.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/Product.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/UnitOfMeasurement.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/StarterConfig.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/WebSecurityConfig.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/WebSecurityProperties.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/dao/InventoryDAO.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/dao/ProductDAO.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/rest/InventoryController.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/rest/ProductController.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/test/java/com/starter/fullstack/config/EmbedMongoClientOverrideConfig.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/test/java/com/starter/fullstack/dao/InventoryDAOTest.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/test/java/com/starter/fullstack/dao/ProductDAOTest.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/test/java/com/starter/fullstack/rest/ProductControllerTest.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/test/java/com/starter/fullstack/rest/InventoryControllerTest.java">
+</file>
+<file name="/home/David/fullstack-starter/starter/src/main/resources/application.properties">
+</file>
+</checkstyle>

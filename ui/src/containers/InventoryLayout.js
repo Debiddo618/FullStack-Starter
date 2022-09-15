@@ -12,8 +12,10 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { EnhancedTableHead, EnhancedTableToolbar, getComparator, stableSort } from '../components/Table'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import InventoryFormModal from '../components/Inventorys/InventoryFormModal'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,11 +30,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const normalizeInventory = (inventory) => inventory.map(inv => ({
-  ...inv,
-  unitOfMeasurement: MeasurementUnits[inv.unitOfMeasurement].name,
-  bestBeforeDate: moment(inv.bestBeforeDate).format('MM/DD/YYYY')
-}))
+const normalizeInventory = (inventory) => inventory.map(inv => {
+  return(
+    {
+      ...inv,
+      unitOfMeasurement: MeasurementUnits[inv.unitOfMeasurement].name,
+      bestBeforeDate: moment(inv.bestBeforeDate).format('MM/DD/YYYY')
+    }
+  )
+})
 
 const headCells = [
   { id: 'name', align: 'left', disablePadding: true, label: 'Name' },
@@ -60,12 +66,14 @@ const InventoryLayout = (props) => {
   const [orderBy, setOrderBy] = React.useState('calories')
   const [selected, setSelected] = React.useState([])
 
+  // sorting 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
 
+  // basically select everything
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = normalizedInventory.map((row) => row.id)
@@ -75,6 +83,7 @@ const InventoryLayout = (props) => {
     setSelected([])
   }
 
+  // basically select or unselect
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id)
     let newSelected = []
@@ -90,15 +99,82 @@ const InventoryLayout = (props) => {
         selected.slice(selectedIndex + 1),
       )
     }
+    //console.log(newSelected)
     setSelected(newSelected)
   }
 
+  // check if the item is selected
   const isSelected = (id) => selected.indexOf(id) !== -1
+
+  const products = useSelector(state => state.products.all)
+  const inventorys = useSelector(state => state.inventory.all)
+  const inventoryToEdit = inventorys.filter(function(inventory){
+    return inventory.id === selected[0]
+  })
+
+  const normalizeInventoryForEditing = (inventory) => inventory.map(inv => {
+    return(
+      {
+        ...inv,
+        bestBeforeDate: moment(inv.bestBeforeDate).format('YYYY-MM-DD')
+      }
+    )
+  })
+  const normalizedInventoryToEdit = normalizeInventoryForEditing(inventoryToEdit)
+  // console.log("?????????????????????????????????????????????//////////////")
+  // console.log(normalizedInventoryToEdit[0])
+
+  
+  const saveInventory = useCallback(inventory => { dispatch(inventoryDuck.saveInventory(inventory))}, [dispatch])
+  const updateInventory = useCallback((ids,inventory) => { dispatch(inventoryDuck.updateInventory(ids, inventory))}, [dispatch])
+
+  //const removeInventory = useCallback(inventory => { dispatch(inventoryDuck.removeInventory(inventory.id))}, [dispatch])
+
+
+  const [isCreateOpen, setCreateOpen] = React.useState(false)
+  const [isEditOpen, setEditOpen] = React.useState(false)
+  //const [isDeleteOpen, setDeleteOpen] = React.useState(false)
+  const toggleCreate = () => {
+    setCreateOpen(true)
+  }
+  const toggleEdit = () => {
+    setEditOpen(true)
+  }
+  // const toggleDelete = () => {
+  //   setDeleteOpen(true)
+  // }
+  const toggleModals = (resetChecked) => {
+    setCreateOpen(false)
+    //setDeleteOpen(false)
+    setEditOpen(false)
+    if (resetChecked) {
+      //setChecked([])
+    }
+  }
+  // const [checked, setChecked] = React.useState([])
+  // const handleToggle = (value) => () => {
+  //   const currentIndex = checked.indexOf(value)
+  //   const newChecked = [...checked]
+
+  //   if (currentIndex === -1) {
+  //     newChecked.push(value)
+  //   } else {
+  //     newChecked.splice(currentIndex, 1)
+  //   }
+  //   setChecked(newChecked)
+  // }
+
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        <EnhancedTableToolbar numSelected={selected.length} title='Inventory'/>
+        <EnhancedTableToolbar 
+          numSelected={selected.length} 
+          title='Inventory'
+          toggleCreate={toggleCreate}
+          toggleEdit={toggleEdit}
+          //toggleDelete={toggleDelete}
+        />
         <TableContainer component={Paper}>
           <Table size='small' stickyHeader>
             <EnhancedTableHead
@@ -140,6 +216,37 @@ const InventoryLayout = (props) => {
             </TableBody>
           </Table>
         </TableContainer>
+        <InventoryFormModal
+          title='Create'
+          formName='inventoryCreate'
+          isDialogOpen={isCreateOpen}
+          handleDialog={toggleModals}
+          handleInventory={saveInventory}
+          unitOfMeasurement={MeasurementUnits}
+          productType={products}
+          initialValues={{
+            name: "",
+            productType: "",
+            description: "",
+            averagePrice: 0,
+            amount: 0,
+            unitOfMeasurement: "",
+            bestBeforeDate: moment(new Date()).format("yyyy-MM-DD"),
+            neverExpires: false
+          }}
+        />
+        <InventoryFormModal
+          title='Edit'
+          formName='inventoryEdit'
+          isDialogOpen={isEditOpen}
+          handleDialog={toggleModals}
+          handleInventory={updateInventory}
+          unitOfMeasurement={MeasurementUnits}
+          productType={products}
+          initialValues={normalizedInventoryToEdit[0]}
+          selected= {selected[0]}
+        />
+        
       </Grid>
     </Grid>
   )

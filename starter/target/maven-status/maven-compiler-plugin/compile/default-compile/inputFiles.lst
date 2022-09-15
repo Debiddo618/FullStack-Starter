@@ -1,0 +1,11 @@
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/StarterApp.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/WebSecurityConfig.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/rest/ProductController.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/StarterConfig.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/dao/ProductDAO.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/rest/InventoryController.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/Product.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/config/WebSecurityProperties.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/Inventory.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/dao/InventoryDAO.java
+/home/David/fullstack-starter/starter/src/main/java/com/starter/fullstack/api/UnitOfMeasurement.java

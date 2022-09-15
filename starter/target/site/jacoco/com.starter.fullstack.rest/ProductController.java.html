@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProductController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">starter-fullstack</a> &gt; <a href="index.source.html" class="el_package">com.starter.fullstack.rest</a> &gt; <span class="el_source">ProductController.java</span></div><h1>ProductController.java</h1><pre class="source lang-java linenums">package com.starter.fullstack.rest;
+
+import com.starter.fullstack.api.Product;
+import com.starter.fullstack.dao.ProductDAO;
+import java.util.List;
+import javax.validation.Valid;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Product Controller.
+ */
+@RestController
+public class ProductController {
+  private final ProductDAO productDAO;
+
+  /**
+   * Default Constructor.
+   * @param productDAO productDAO.
+   */
+<span class="fc" id="L25">  public ProductController(ProductDAO productDAO) {</span>
+<span class="fc" id="L26">    Assert.notNull(productDAO, &quot;Product DAO must not be null.&quot;);</span>
+<span class="fc" id="L27">    this.productDAO = productDAO;</span>
+<span class="fc" id="L28">  }</span>
+
+  /**
+   * Find Products.
+   * @return List of Product.
+   */
+  @GetMapping(&quot;/products&quot;)
+  public List&lt;Product&gt; findProducts() {
+<span class="fc" id="L36">    return this.productDAO.findAll();</span>
+  }
+
+  /**
+   * Save Product.
+   * @param product product.
+   * @return Product.
+   */
+  @PostMapping(&quot;/products&quot;)
+  public Product saveProduct(@Valid @RequestBody Product product) {
+<span class="fc" id="L46">    return this.productDAO.save(product);</span>
+  }
+
+  /**
+   * Delete Product By Id.
+   *
+   * @param ids ids.
+   */
+  @DeleteMapping(&quot;/products&quot;)
+  public void deleteProductById(@RequestBody List&lt;String&gt; ids) {
+<span class="fc" id="L56">    Assert.notEmpty(ids, &quot;Product Ids were not provided&quot;);</span>
+<span class="fc" id="L57">    this.productDAO.deleteProductsByIdIn(ids);</span>
+<span class="fc" id="L58">  }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
