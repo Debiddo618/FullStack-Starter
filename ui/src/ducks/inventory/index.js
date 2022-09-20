@@ -41,18 +41,23 @@ export const saveInventory = createAction(actions.INVENTORY_SAVE, (inventory) =>
 )
 
 //delete
-export const removeInventory = createAction(actions.INVENTORY_DELETE, (ids) =>
-  (dispatch, getState, config) => axios
-    .delete(`${config.restAPIUrl}/inventory`, { data: ids })
-    .then((suc) => {
-      const invs = []
-      getState().inventory.all.forEach(inv => {
-        if (!ids.includes(inv.id)) {
-          invs.push(inv)
-        }
+export const removeInventory = createAction(actions.INVENTORY_DELETE, (id) => {
+  // console.log("inside removeInventory create action !!!!!!!!!!!!!!!!!")
+  // console.log("The id is: " + id + " and the type is: " + typeof(id))
+  return (
+    async (dispatch, getState, config) => await axios
+      .delete(`${config.restAPIUrl}/inventory`, { data: id })
+      .then((suc) => {
+        const invs = []
+        getState().inventory.all.forEach(inv => {
+          if (id !== inv.id) {
+            invs.push(inv)
+          }
+        })
+        dispatch(refreshInventory(invs))
       })
-      dispatch(refreshInventory(invs))
-    })
+  )
+}
 )
 
 //update
@@ -95,7 +100,7 @@ export default handleActions({
   }),
   [actions.INVENTORY_DELETE]: (state, action) => ({
     ...state,
-    all: state.all.filter(inv => inv.id !== action.payload.ids),
+    all: state.all.filter(inv => inv.id !== action.payload.id),
   }),
   [actions.INVENTORY_UPDATE]: (state, action) => ({
     ...state,
